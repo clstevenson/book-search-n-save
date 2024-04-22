@@ -17,9 +17,9 @@ const server = new ApolloServer({typeDefs, resolvers});
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// if we're in production, serve client/build as static assets
+// if we're in production, serve client/dist as static assets
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.use(express.static(path.join(__dirname, '../client/dist')));
 }
 
 // Create a new instance of an Apollo server with the GraphQL schema
