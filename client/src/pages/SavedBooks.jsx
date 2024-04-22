@@ -6,41 +6,32 @@ import {
   Row,
   Col
 } from 'react-bootstrap';
+import { useQuery } from '@apollo/client';
 
 // import { getMe, deleteBook } from '../utils/API';
+import { GET_ME } from '../utils/queries';
+
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
 
-  // use this to determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
-
+  // check for token
+  const token = Auth.loggedIn() ? Auth.getToken() : null;
+  if (!token) return false;
+  // retrieve saved books
+  const { loading, data } = useQuery(GET_ME);
+  const user = data?.me || {};
+  // don't update user until finished loading
   useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-        if (!token) {
-          return false;
-        }
-
-        const response = await getMe(token);
-
-        if (!response.ok) {
-          throw new Error('something went wrong!');
-        }
-
-        const user = await response.json();
-        setUserData(user);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getUserData();
-  }, [userDataLength]);
+    setUserData(user);
+  }, [loading]);
+  // if data isn't here yet, say so
+  const userDataLength = Object.keys(userData).length;
+  if (!userDataLength) {
+    return <h2>LOADING...</h2>;
+  }
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -65,11 +56,6 @@ const SavedBooks = () => {
       console.error(err);
     }
   };
-
-  // if data isn't here yet, say so
-  if (!userDataLength) {
-    return <h2>LOADING...</h2>;
-  }
 
   return (
     <>

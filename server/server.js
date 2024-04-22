@@ -2,6 +2,7 @@ const express = require('express');
 // Import the ApolloServer class
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
+const { authMiddleware } = require('./utils/auth');
 
 // Import the two parts of a GraphQL schema
 const { typeDefs, resolvers } = require('./schemas');
@@ -29,8 +30,10 @@ const startApolloServer = async () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
-  // assign a route for the Apollo server sandbox
-  app.use('/graphql', expressMiddleware(server));
+  // assign a route for the Apollo server sandbox (with context)
+  app.use('/graphql', expressMiddleware(server, {
+    context: authMiddleware
+  }));
 
   // this part is Mongoose connecting to the database
   db.once('open', () => {

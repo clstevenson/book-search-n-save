@@ -5,6 +5,12 @@ const resolvers = {
   Query: {
     // get all users (not needed in production, include for development)
     users: async () => await User.find({}),
+    // get single user by either ID or username (obtained from context)
+    me: async (_, __, { user }) => {
+      const foundUser = await User.findOne({ $or: [{ _id: user._id }, { username: user.username }], });
+      if (!foundUser) return 'Error: Cannot find this user';
+      return foundUser;
+    },
   },
   Mutation: {
     // log in and issue a signed token
