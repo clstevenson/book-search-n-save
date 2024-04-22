@@ -19,6 +19,16 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+    addUser: async (_, { username, email, password }) => {
+      const user = await User.create({ username, email, password });
+      // return with error message if no user created
+      if (!user) {
+        return 'Error: Something is wrong!';
+      }
+      // sign the JWT and return with the user
+      const token = signToken(user);
+      return { token, user };
+    },
   },
 };
 
