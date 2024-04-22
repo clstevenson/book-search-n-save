@@ -50,6 +50,18 @@ const resolvers = {
         return err;
       }
     },
+    removeBook: async (_, { bookId }, { user }) => {
+      try {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: user._id },
+          { $pull: { savedBooks: { bookId: bookId } } },
+          { new: true }
+        );
+        return updatedUser;
+      } catch (err) {
+        console.log(err)
+      }
+    },
   },
 };
 

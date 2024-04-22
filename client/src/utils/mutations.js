@@ -26,3 +26,20 @@ mutation saveBook($book: BookData) {
   }
 }
 `;
+
+// remove book from user's list
+export const REMOVE_BOOK=gql`
+mutation removeBook($bookId: String!) {
+  removeBook(bookId: $bookId) {
+    bookCount
+    savedBooks {
+      bookId
+      title
+      authors
+      description
+      image
+      link
+    }
+  }
+}
+`;
