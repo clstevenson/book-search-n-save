@@ -20,13 +20,16 @@ const SavedBooks = () => {
   // check for token
   const token = Auth.loggedIn() ? Auth.getToken() : null;
   if (!token) return false;
+
   // retrieve saved books
   const { loading, data } = useQuery(GET_ME);
   const user = data?.me || {};
+
   // don't update user until finished loading
   useEffect(() => {
     setUserData(user);
   }, [loading]);
+
   // if data isn't here yet, say so
   const userDataLength = Object.keys(userData).length;
   if (!userDataLength) {

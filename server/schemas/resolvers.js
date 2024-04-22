@@ -35,6 +35,21 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+    saveBook: async (_, { book }, { user }) => {
+      try {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: user._id },
+          { $addToSet: { savedBooks: book } },
+          { new: true, runValidators: true }
+        );
+        if (!updatedUser) {
+          return 'Error: Could not save book!'
+        }
+        return updatedUser;
+      } catch (err) {
+        return err;
+      }
+    },
   },
 };
 

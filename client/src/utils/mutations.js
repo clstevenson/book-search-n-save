@@ -17,3 +17,12 @@ mutation addUser($username: String!, $email: String!, $password: String!) {
   }
 }
 `;
+
+// save book to user's list
+export const SAVE_BOOK=gql`
+mutation saveBook($book: BookData) {
+  saveBook(book: $book) {
+    username
+  }
+}
+`;
