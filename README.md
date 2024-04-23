@@ -17,7 +17,7 @@ The initial home page is the search page; you do not need an account to search f
 
 The screenshot below shows a save list for a logged-in user.
 
-![saved book list](/Users/cstevens/Bootcamp/Challenge-21/search-n-save_screenshot.png)
+![saved book list](./search-n-save_screenshot.png)
 
 ## Questions
 Reach out if you have questions that are not covered here!
