@@ -13,11 +13,15 @@ This app has been deployed to Render:
 Note that I am currently using the free tier so it may take up to minute to spin up on first access.
 
 ## Use
-The initial home page is the search page; you do not need an account to search for books, but you must create one (or login if you have already done so) in order to save the results.
+The initial home page is the search page; you do not need an account to search for books, but you must create one (or login if you have already done so) in order to save the results. The screenshot below shows the first three results of a search for "Zelazney".
 
-The screenshot below shows a save list for a logged-in user.
+![search results](book-search-results.png)
+
+If you are not logged in, the "Save this Book" buttons do not appear. After saving a book if you click on the "See your books" menu, you are presented with a list of saved books, such as the one shown in the screenshot below.
 
 ![saved book list](./search-n-save_screenshot.png)
+
+You may remove any individual book from a saved list by clicking the "Delete this Book" button. Saved book lists are specific to a user, and persist across login sessions.
 
 ## Questions
 Reach out if you have questions that are not covered here!

@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   Container,
   Card,
@@ -6,17 +5,19 @@ import {
   Row,
   Col
 } from 'react-bootstrap';
-import { useQuery, useMutation } from '@apollo/client';
 
-// import { getMe, deleteBook } from '../utils/API';
+// set up Apollo client and mutations for this page
+import { useQuery, useMutation } from '@apollo/client';
 import { GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
 
+// management utilities for token and book IDs
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
+// begin component definition
 const SavedBooks = () => {
-  // const [userData, setUserData] = useState({});
+  // after removing a book refresh the page
   const [removeBook] = useMutation(REMOVE_BOOK, {
     refetchQueries: [ GET_ME, 'me' ]
   });
@@ -25,28 +26,23 @@ const SavedBooks = () => {
   const token = Auth.loggedIn() ? Auth.getToken() : null;
   if (!token) return false;
 
-  // retrieve saved books
+  // retrieve saved books (without caching)
   const { loading, data } = useQuery(GET_ME, {
     fetchPolicy: 'network-only'
   });
   const user = data?.me || {};
 
-  // don't update user until finished loading
-  // useEffect(() => {
-  //   setUserData(user);
-  // }, [loading]);
-
   // if data isn't here yet, say so
-  // const userDataLength = Object.keys(userData).length;
   if (loading) {
     return <h2>LOADING...</h2>;
   }
 
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
+  // CB function to remove book from the saved list (user presses "remove" button to call)
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
+      // user is not logged in
       return false;
     }
 
@@ -56,8 +52,8 @@ const SavedBooks = () => {
       });
 
       if (data) {
-        // upon success, update display and remove bookID from local storage
-        setUserData(data.removeBook);
+        // upon success remove ID of deleted book from local storage
+        // note that the GET_ME refetch/refresh is automatically triggered
         removeBookId(bookId);
       }
     } catch (err) {
