@@ -16,25 +16,29 @@ import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState({});
-  const [removeBook] = useMutation(REMOVE_BOOK);
+  // const [userData, setUserData] = useState({});
+  const [removeBook] = useMutation(REMOVE_BOOK, {
+    refetchQueries: [ GET_ME, 'me' ]
+  });
 
   // check for token
   const token = Auth.loggedIn() ? Auth.getToken() : null;
   if (!token) return false;
 
   // retrieve saved books
-  const { loading, data } = useQuery(GET_ME);
+  const { loading, data } = useQuery(GET_ME, {
+    fetchPolicy: 'network-only'
+  });
   const user = data?.me || {};
 
   // don't update user until finished loading
-  useEffect(() => {
-    setUserData(user);
-  }, [loading]);
+  // useEffect(() => {
+  //   setUserData(user);
+  // }, [loading]);
 
   // if data isn't here yet, say so
-  const userDataLength = Object.keys(userData).length;
-  if (!userDataLength) {
+  // const userDataLength = Object.keys(userData).length;
+  if (loading) {
     return <h2>LOADING...</h2>;
   }
 
@@ -70,12 +74,12 @@ const SavedBooks = () => {
       </div>
       <Container>
         <h2 className='pt-5'>
-          {userData.savedBooks.length
-            ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
+          {user.savedBooks.length
+            ? `Viewing ${user.savedBooks.length} saved ${user.savedBooks.length === 1 ? 'book' : 'books'}:`
             : 'You have no saved books!'}
         </h2>
         <Row>
-          {userData.savedBooks.map((book) => {
+          {user.savedBooks.map((book) => {
             return (
               <Col md="4">
                 <Card key={book.bookId} border='dark'>
